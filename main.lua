@@ -13,7 +13,7 @@ local function obterBolaPerfeita()
     
     -- Se o jogo escondeu a bola, caça pela propriedade física esférica
     for _, objeto in pairs(workspace:GetDescendants()) do
-        if objeto:IsA("BasePart") and objeto.Shape == Enum.PartType.Ball then
+        if objeto:IsA("BasePart") and not objeto:IsA("UnionOperation") and objeto.Shape == Enum.PartType.Ball then
             if not objeto:IsDescendantOf(game.Players.LocalPlayer.Character) and objeto.CanCollide == true then
                 return objeto
             end
