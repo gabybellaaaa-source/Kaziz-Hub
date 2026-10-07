@@ -1,1 +1,578 @@
+-- Protected build: identifiers renamed and string literals encoded.
+local function _D(...)
+ local t = {...}
+ local s = {}
+ for i = 1, #t do
+ s[i] = string.char(t[i])
+ end
+ return table.concat(s)
+end
+ Valkyrie Hub - Redesigned & Optimized
+ Desenvolvido para _Fa Interface Suite
+local _Fa = loadstring(game:HttpGet(_D(104,116,116,112,115,58,47,47,114,97,119,46,103,105,116,104,117,98,117,115,101,114,99,111,110,116,101,110,116,46,99,111,109,47,78,101,98,117,108,97,45,83,111,102,116,119,111,114,107,115,47,76,117,110,97,45,73,110,116,101,114,102,97,99,101,45,83,117,105,116,101,47,114,101,102,115,47,104,101,97,100,115,47,109,97,115,116,101,114,47,115,111,117,114,99,101,46,108,117,97), true))()
+local _ja = game:GetService(_D(80,108,97,121,101,114,115))
+local _Q = game:GetService(_D(82,117,110,83,101,114,118,105,99,101))
+local _l = game:GetService(_D(85,115,101,114,73,110,112,117,116,83,101,114,118,105,99,101))
+local _d = game:GetService(_D(82,101,112,108,105,99,97,116,101,100,83,116,111,114,97,103,101))
+local _Y = game:GetService(_D(87,111,114,107,115,112,97,99,101))
+local _K = _ja._K
+local _L = {
+ isActive = false,
+ legs = 6,
+ _U = _D(84,80,83),
+ hitboxColor = Color3.fromRGB(255, 0, 0),
+ hitboxTransparency = 0.6,
+ hideReach = true,
+}
+local function _p(_Ha)
+ local _ra = _Ha.Parent
+ while _ra do
+ if _ra == _Y then return false end
+ local _Xa = _ra.Name
+ if _Xa == _D(87,111,114,107,115,112,97,99,101,83,116,97,100,105,117,109,83,111,117,110,100,115) or _Xa == _D(83,116,97,100,105,117,109,70,111,108,100,101,114) or _Xa == _D(83,116,97,100,105,117,109,102,111,108,100,101,114) or _Xa == _D(83,116,97,100,105,117,109) then
+ return true
+ end
+ _ra = _ra.Parent
+ end
+ return false
+end
+local function _N(_La)
+ local _Ia = nil
+ local _Z = -math.huge
+ local _pa = _Y.CurrentCamera.CFrame.Position
+ for _, _Ha in ipairs(_La) do
+ if _Ha and _Ha.Parent then
+ local _Ta, _Ra = pcall(function() return _Ha.Position end)
+ if _Ta and _Ra and _Ra.Y > -100 and _Ra.Magnitude < 1e6 then
+ local _Ca
+ if _p(_Ha) then _Ca = 1000 else _Ca = 100 end
+ _Ca = _Ca - (_pa - _Ra).Magnitude * 0.01
+ if _Ca > _Z then
+ _Z = _Ca
+ _Ia = _Ha
+ end
+ end
+ end
+ end
+ return _Ia
+end
+local _qa = Instance.new(_D(80,97,114,116))
+_qa.Name = _D(111,112)
+_qa.Shape = Enum.PartType.Block
+_qa.Size = Vector3.new(6, 6, 6)
+_qa.Color = _L.hitboxColor
+_qa.Material = Enum.Material.Neon
+_qa.Transparency = 1
+_qa.CanCollide = false
+_qa.CanTouch = true
+_qa.CanQuery = true
+_qa.Anchored = true
+_qa.Massless = true
+_qa.Parent = _Y
+task.spawn(function()
+ while true do
+ task.wait(2)
+ if not _qa or not _qa.Parent then
+ _qa = Instance.new(_D(80,97,114,116))
+ _qa.Name = _D(111,112)
+ _qa.Shape = Enum.PartType.Block
+ _qa.Size = Vector3.new(6, 6, 6)
+ _qa.Color = _L.hitboxColor
+ _qa.Material = Enum.Material.Neon
+ _qa.Transparency = 1
+ _qa.CanCollide = false
+ _qa.CanTouch = true
+ _qa.CanQuery = true
+ _qa.Anchored = true
+ _qa.Massless = true
+ _qa.Parent = _Y
+ end
+ end
+end)
+local _R = {}
+local _ea = nil
+local function _O(_xa)
+ local _Ja = _K.Character
+ if not _Ja then
+ _R = {}
+ _ea = nil
+ return
+ end
+ if not _xa and _ea == _Ja then
+ local _Da = true
+ for _, _Ya in ipairs(_R) do
+ if not _Ya or not _Ya.Parent then _Da = false break end
+ end
+ if _Da then return end
+ end
+ _ea = _Ja
+ local _Qa = {}
+ local _za = {
+ _D(76,101,102,116,32,76,101,103), _D(82,105,103,104,116,32,76,101,103),
+ _D(76,101,102,116,85,112,112,101,114,76,101,103), _D(82,105,103,104,116,85,112,112,101,114,76,101,103),
+ _D(76,101,102,116,76,111,119,101,114,76,101,103), _D(82,105,103,104,116,76,111,119,101,114,76,101,103),
+ _D(76,101,102,116,32,70,111,111,116), _D(82,105,103,104,116,32,70,111,111,116), _D(76,101,102,116,70,111,111,116), _D(82,105,103,104,116,70,111,111,116),
+ }
+ for _, name in ipairs(_za) do
+ local _Ya = _Ja:FindFirstChild(name)
+ if _Ya and _Ya:IsA(_D(66,97,115,101,80,97,114,116)) then
+ pcall(function() _Ya.CanTouch = true _Ya.CanQuery = true end)
+ table.insert(_Qa, _Ya)
+ end
+ end
+ _R = _Qa
+end
+local function _aa(_Ua, _Va)
+ pcall(firetouchinterest, _Ua, _Va, 0)
+ pcall(firetouchinterest, _Ua, _Va, 1)
+end
+local _M = 0
+local function _ta()
+ if not _L.isActive then return end
+ local _Pa = tick()
+ if _Pa - _M < 0.15 then return end
+ _M = _Pa
+ local _Ja = _K.Character
+ if not _Ja then pcall(function() _qa.CFrame = CFrame.new(0, -500, 0) end) return end
+ _O(false)
+ local _va = {}
+ for _, v in ipairs(_Y:GetDescendants()) do
+ if v:IsA(_D(66,97,115,101,80,97,114,116)) and v.Name == _L._U then
+ local _Ta, _Ra = pcall(function() return v.Position end)
+ if _Ta and _Ra and _Ra.Y > -100 and _Ra.Magnitude < 1e6 then
+ table.insert(_va, v)
+ pcall(function() v.CanTouch = true v.CanQuery = true end)
+ end
+ end
+ end
+ if #_va == 0 then pcall(function() _qa.CFrame = CFrame.new(0, -500, 0) end) return end
+ local _U = _N(_va)
+ if not _U then pcall(function() _qa.CFrame = CFrame.new(0, -500, 0) end) return end
+ _qa.Transparency = _L.hideReach and 1 or _L.hitboxTransparency
+ _qa.Size = Vector3.new(_L.legs, _L.legs, _L.legs)
+ pcall(function() _qa.CFrame = _U.CFrame end)
+ for _, _Ha in ipairs(_va) do
+ local _ka = _Ha.Position
+ local _Aa = _L.legs
+ if _Aa > 0 then
+ local _na = _Aa * _Aa
+ for _, _Ma in ipairs(_R) do
+ if _Ma and _Ma.Parent then
+ local _Wa = _Ma.Position - _ka
+ if _Wa.X*_Wa.X + _Wa.Y*_Wa.Y + _Wa.Z*_Wa.Z <= _na then
+ _aa(_qa, _Ma)
+ _aa(_Ha, _Ma)
+ end
+ end
+ end
+ end
+ end
+end
+_Q.Heartbeat:Connect(_ta)
+_K.CharacterAdded:Connect(function(_Ja)
+ _ea = nil
+ _Ja:WaitForChild(_D(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116), 5)
+ task.wait(0.5)
+ _O(true)
+end)
+task.spawn(function()
+ while true do
+ task.wait(1)
+ if _L.isActive then _O(false) end
+ end
+end)
+local _z = false
+local _g = nil
+local _ha = _K.Character or _K.CharacterAdded:Wait()
+local _H = _ha:WaitForChild(_D(72,117,109,97,110,111,105,100))
+local _I = _ha:WaitForChild(_D(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116))
+local _m = 150
+local _F = 0.8
+local _f = false
+local _E = Instance.new(_D(83,99,114,101,101,110,71,117,105))
+_E.Name = _D(84,80,83,70,111,108,108,111,119,85,73)
+_E.ResetOnSpawn = false
+_E.IgnoreGuiInset = true
+_E.Enabled = false
+_E.Parent = _K:WaitForChild(_D(80,108,97,121,101,114,71,117,105))
+local _V = Instance.new(_D(84,101,120,116,66,117,116,116,111,110))
+_V.Name = _D(70,111,108,108,111,119,66,117,116,116,111,110)
+_V.Size = UDim2.new(0, 120, 0, 42)
+_V.Position = UDim2.new(0.82, 0, 0.68, 0)
+_V.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+_V.BorderSizePixel = 0
+_V.Text = _D(70,111,108,108,111,119,58,32,79,70,70)
+_V.TextColor3 = Color3.fromRGB(255, 255, 255)
+_V.TextSize = 13
+_V.Font = Enum.Font.GothamBold
+_V.AutoButtonColor = true
+_V.Visible = true
+_V.Parent = _E
+local _fa = Instance.new(_D(85,73,67,111,114,110,101,114), _V)
+_fa.CornerRadius = UDim.new(0, 8)
+local _ga = Instance.new(_D(85,73,83,116,114,111,107,101), _V)
+_ga.Color = Color3.fromRGB(80, 80, 90)
+_ga.Thickness = 1.5
+local function _J(_Sa)
+ return _Sa and _Sa.Parent and _Sa:IsA(_D(66,97,115,101,80,97,114,116)) and _Sa.Name == _D(84,80,83) and _Sa:IsDescendantOf(_Y)
+end
+local function _h()
+ local _la, _o = nil, math.huge
+ for _, object in ipairs(_Y:GetDescendants()) do
+ if object:IsA(_D(66,97,115,101,80,97,114,116)) and object.Name == _D(84,80,83) then
+ local _ca = (object.Position - _I.Position).Magnitude
+ if _ca <= _m and _ca < _o then
+ _o = _ca
+ _la = object
+ end
+ end
+ end
+ return _la
+end
+local function _n()
+ if _z then
+ _V.Text = _D(70,111,108,108,111,119,58,32,79,78)
+ _V.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+ _V.TextColor3 = Color3.fromRGB(255, 255, 255)
+ _ga.Color = Color3.fromRGB(100, 255, 150)
+ else
+ _V.Text = _D(70,111,108,108,111,119,58,32,79,70,70)
+ _V.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+ _V.TextColor3 = Color3.fromRGB(200, 200, 200)
+ _ga.Color = Color3.fromRGB(80, 80, 90)
+ end
+end
+local function _b()
+ local _sa = _h()
+ if not _sa then return end
+ _g = _sa
+ _z = true
+ _n()
+end
+local function _j()
+ _z = false
+ _g = nil
+ _n()
+end
+local function _a()
+ if not _f then return end
+ if _z then 
+ _j() 
+ else 
+ _b() 
+ end
+end
+_V.MouseButton1Click:Connect(_a)
+_Q.RenderStepped:Connect(function()
+ if not _z then return end
+ if not _ha or not _ha.Parent then return end
+ if not _H or _H.Health <= 0 then return end
+ if not _I or not _I.Parent then return end
+ if not _J(_g) then _j() return end
+ if _g:IsDescendantOf(_ha) then return end
+ local _S = _g.Position - _I.Position
+ local _T = Vector3.new(_S.X, 0, _S.Z)
+ if _T.Magnitude <= _F then return end
+ local _q = _H.MoveDirection
+ if _q.Magnitude > 0.05 then return end
+ _H:Move(_T.Unit, false)
+end)
+local _G = false
+local _y = nil
+local _i = nil
+local _x = nil
+_V.InputBegan:Connect(function(_ya)
+ if _ya.UserInputType == Enum.UserInputType.MouseButton1 or _ya.UserInputType == Enum.UserInputType.Touch then
+ _G = true
+ _y = _ya.Position
+ _i = _V.Position
+ _ya.Changed:Connect(function()
+ if _ya.UserInputState == Enum.UserInputState.End then _G = false end
+ end)
+ end
+end)
+_V.InputChanged:Connect(function(_ya)
+ if _ya.UserInputType == Enum.UserInputType.MouseMovement or _ya.UserInputType == Enum.UserInputType.Touch then
+ _x = _ya
+ end
+end)
+_l.InputChanged:Connect(function(_ya)
+ if _G and _ya == _x then
+ local _wa = _ya.Position - _y
+ _V.Position = UDim2.new(_i.X.Scale, _i.X.Offset + _wa.X, _i.Y.Scale, _i.Y.Offset + _wa.Y)
+ end
+end)
+_K.CharacterAdded:Connect(function(_B)
+ _ha = _B
+ _H = _ha:WaitForChild(_D(72,117,109,97,110,111,105,100))
+ _I = _ha:WaitForChild(_D(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116))
+ _z = false
+ _g = nil
+ _n()
+end)
+local _A = {
+ Enabled = false,
+ Studs = 10
+}
+_Q.Heartbeat:Connect(function()
+ if not _A.Enabled then return end
+ local _Ha = nil
+ for _, v in ipairs(_Y:GetDescendants()) do
+ if v:IsA(_D(66,97,115,101,80,97,114,116)) and v.Name == _D(84,80,83) then
+ _Ha = v
+ break
+ end
+ end
+ if not _Ha then return end
+ for _, player in ipairs(_ja:GetPlayers()) do
+ if player ~= _K and player.Character then
+ local _da = player.Character:FindFirstChild(_D(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116))
+ if _da then
+ local _Ka = (_da.Position - _Ha.Position).Magnitude
+ if _Ka <= _A.Studs then
+ local _ma = (_da.Position - _Ha.Position).Unit
+ if _ma.Magnitude == 0 or _ma ~= _ma then
+ _ma = Vector3.new(1, 0, 0)
+ end
+ _da.CFrame = CFrame.new(_Ha.Position + _ma * (_A.Studs + 2))
+ end
+ end
+ end
+ end
+end)
+local _u = workspace.CurrentCamera
+local _e = nil
+local _D = 0.65
+local function _C()
+ if _e then return end
+ _e = _Q.RenderStepped:Connect(function()
+ _u.CFrame = _u.CFrame * CFrame.new(0, 0, 0, 1, 0, 0, 0, _D, 0, 0, 0, 1)
+ end)
+end
+local function _P()
+ if _e then
+ _e:Disconnect()
+ _e = nil
+ end
+end
+_C()
+local function _w(_Ea)
+ local _Ba = math.clamp(_Ea / 100, 0.1, 1.0)
+ _u.FieldOfView = 70 * (1 / _Ba)
+end
+local _k = false
+local _r = 10
+local _c = 1
+local _s = 0
+local function _v()
+ local _Ja = _K.Character
+ if not _Ja then return false end
+ local _Na = _Ja:FindFirstChildOfClass(_D(84,111,111,108))
+ if not _Na then return false end
+ return _Na.Name == _D(71,75) or _Na.Name == _D(71,107)
+end
+task.spawn(function()
+ while true do
+ task.wait()
+ if _k and _v() then
+ if tick() - _s >= _c then
+ local _Ja = _K.Character
+ if _Ja then
+ local _Oa = _Ja:FindFirstChild(_D(72,117,109,97,110,111,105,100,82,111,111,116,80,97,114,116))
+ if _Oa then
+ for _, obj in ipairs(_Y:GetDescendants()) do
+ if obj.Name == _D(84,80,83) and (obj:IsA(_D(66,97,115,101,80,97,114,116)) or obj:IsA(_D(77,111,100,101,108))) then
+ local _Ma = obj:IsA(_D(66,97,115,101,80,97,114,116)) and obj or (obj.PrimaryPart or obj:FindFirstChildWhichIsA(_D(66,97,115,101,80,97,114,116)))
+ if _Ma and (_Ma.Position - _Oa.Position).Magnitude <= _r then
+ pcall(function()
+ local _Ga = { [1] = obj }
+ _d.CatchBall:FireServer(table.unpack(_Ga))
+ end)
+ _s = tick()
+ break
+ end
+ end
+ end
+ end
+ end
+ end
+ end
+ end
+end)
+local _oa = _Fa:CreateWindow({
+ Name = _D(86,97,108,107,121,114,105,101,32,72,117,98),
+ Subtitle = _D(98,121,32,68,97,114,107,77,105,114,97,103,101),
+ LogoID = _D(56,50,55,57,53,51,50,55,49,54,57,55,56,50),
+ LoadingEnabled = true,
+ LoadingTitle = _D(86,97,108,107,121,114,105,101,32,72,117,98),
+ LoadingSubtitle = _D(98,121,32,68,97,114,107,77,105,114,97,103,101),
+ ConfigSettings = {
+ RootFolder = _D(86,97,108,107,121,114,105,101,72,117,98,68,97,116,97),
+ ConfigFolder = _D(86,97,108,107,121,114,105,101,72,117,98)
+ },
+ KeySystem = false,
+})
+_oa:CreateHomeTab({
+ SupportedExecutors = {
+ _D(83,121,110,97,112,115,101,32,88),
+ _D(75,114,110,108),
+ _D(70,108,117,120,117,115),
+ _D(83,99,114,105,112,116,45,87,97,114,101),
+ _D(68,101,108,116,97),
+ _D(87,97,118,101),
+ _D(67,111,109,101,116)
+ },
+ DiscordInvite = _D(),
+ Icon = 1
+})
+local _ba = _oa:CreateTab({
+ Name = _D(82,101,97,99,104),
+ Icon = _D(111,112,101,110,95,119,105,116,104),
+ ImageSource = _D(77,97,116,101,114,105,97,108),
+ ShowTitle = true
+})
+_ba:CreateSection(_D(67,111,110,102,105,103,117,114,97,195,167,195,181,101,115,32,100,111,32,82,101,97,99,104))
+_ba:CreateToggle({
+ Name = _D(65,116,105,118,97,114,32,82,101,97,99,104),
+ CurrentValue = false,
+ Callback = function(_ua)
+ _L.isActive = _ua
+ _Fa:Notification({
+ Title = _D(86,97,108,107,121,114,105,101,32,72,117,98),
+ Content = _ua and _D(82,101,97,99,104,32,102,111,105,32,97,116,105,118,97,100,111,33) or _D(82,101,97,99,104,32,102,111,105,32,100,101,115,97,116,105,118,97,100,111,33),
+ Duration = 2
+ })
+ end
+}, _D(82,101,97,99,104,84,111,103,103,108,101))
+_ba:CreateToggle({
+ Name = _D(79,99,117,108,116,97,114,32,72,105,116,98,111,120,32,40,82,101,97,99,104,32,72,105,100,101,41),
+ CurrentValue = true,
+ Callback = function(_ua)
+ _L.hideReach = _ua
+ end
+}, _D(82,101,97,99,104,72,105,100,101,84,111,103,103,108,101))
+_ba:CreateSlider({
+ Name = _D(68,105,115,116,195,162,110,99,105,97,32,40,83,116,117,100,115,41),
+ Range = {1, 6},
+ Increment = 1,
+ CurrentValue = 6,
+ Callback = function(_ua)
+ _L.legs = _ua
+ end
+}, _D(82,101,97,99,104,83,108,105,100,101,114))
+local _X = _oa:CreateTab({
+ Name = _D(80,108,97,121,101,114),
+ Icon = _D(112,101,114,115,111,110),
+ ImageSource = _D(77,97,116,101,114,105,97,108),
+ ShowTitle = true
+})
+_X:CreateSection(_D(65,117,116,111,32,70,111,108,108,111,119,32,66,111,108,97))
+_X:CreateToggle({
+ Name = _D(65,116,105,118,97,114,32,65,117,116,111,32,70,111,108,108,111,119),
+ CurrentValue = false,
+ Callback = function(_ua)
+ _f = _ua
+ _E.Enabled = _ua
+ if not _ua then
+ _j()
+ end
+ _Fa:Notification({
+ Title = _D(65,117,116,111,32,70,111,108,108,111,119),
+ Content = _ua and _D(65,117,116,111,32,70,111,108,108,111,119,32,72,97,98,105,108,105,116,97,100,111,33) or _D(65,117,116,111,32,70,111,108,108,111,119,32,68,101,115,97,98,105,108,105,116,97,100,111,33),
+ Duration = 2
+ })
+ end
+}, _D(65,117,116,111,66,97,108,108,84,111,103,103,108,101))
+_X:CreateSection(_D(83,104,105,101,108,100,32,100,97,32,66,111,108,97,32,40,65,110,116,105,45,73,110,105,109,105,103,111,41))
+_X:CreateToggle({
+ Name = _D(65,116,105,118,97,114,32,66,97,108,108,32,83,104,105,101,108,100),
+ CurrentValue = false,
+ Callback = function(_ua)
+ _A.Enabled = _ua
+ _Fa:Notification({
+ Title = _D(66,97,108,108,32,83,104,105,101,108,100),
+ Content = _ua and _D(66,97,108,108,32,83,104,105,101,108,100,32,65,116,105,118,97,100,111,33) or _D(66,97,108,108,32,83,104,105,101,108,100,32,68,101,115,97,116,105,118,97,100,111,33),
+ Duration = 2
+ })
+ end
+}, _D(83,104,105,101,108,100,84,111,103,103,108,101))
+_X:CreateSlider({
+ Name = _D(68,105,115,116,195,162,110,99,105,97,32,100,111,32,83,104,105,101,108,100,32,40,83,116,117,100,115,41),
+ Range = {5, 30},
+ Increment = 1,
+ CurrentValue = 10,
+ Callback = function(_ua)
+ _A.Studs = _ua
+ end
+}, _D(83,104,105,101,108,100,83,108,105,100,101,114))
+_X:CreateSection(_D(73,110,116,101,114,102,97,99,101,32,70,108,117,116,117,97,110,116,101,32,77,111,98,105,108,101))
+_X:CreateToggle({
+ Name = _D(77,111,115,116,114,97,114,32,66,111,116,195,163,111,32,70,108,117,116,117,97,110,116,101),
+ CurrentValue = true,
+ Callback = function(_ua)
+ _V.Visible = _ua
+ end
+}, _D(65,117,116,111,66,97,108,108,77,111,98,105,108,101,84,111,103,103,108,101))
+local _t = _oa:CreateTab({
+ Name = _D(71,111,97,108,107,101,101,112,101,114),
+ Icon = _D(115,112,111,114,116,115,95,104,97,110,100,98,97,108,108),
+ ImageSource = _D(77,97,116,101,114,105,97,108),
+ ShowTitle = true
+})
+_t:CreateSection(_D(65,117,116,111,32,67,97,116,99,104,32,40,71,111,108,101,105,114,111,41))
+_t:CreateToggle({
+ Name = _D(65,116,105,118,97,114,32,65,117,116,111,32,67,97,116,99,104),
+ CurrentValue = false,
+ Callback = function(_ua)
+ _k = _ua
+ _Fa:Notification({
+ Title = _D(71,111,97,108,107,101,101,112,101,114),
+ Content = _ua and _D(65,117,116,111,32,67,97,116,99,104,32,65,116,105,118,97,100,111,33) or _D(65,117,116,111,32,67,97,116,99,104,32,68,101,115,97,116,105,118,97,100,111,33),
+ Duration = 2
+ })
+ end
+}, _D(65,117,116,111,67,97,116,99,104,84,111,103,103,108,101))
+_t:CreateSlider({
+ Name = _D(65,108,99,97,110,99,101,32,100,97,32,68,101,102,101,115,97,32,40,83,116,117,100,115,41),
+ Range = {1, 50},
+ Increment = 1,
+ CurrentValue = 10,
+ Callback = function(_ua)
+ _r = _ua
+ end
+}, _D(65,117,116,111,67,97,116,99,104,83,108,105,100,101,114))
+local _ia = _oa:CreateTab({
+ Name = _D(77,105,115,99),
+ Icon = _D(115,101,116,116,105,110,103,115),
+ ImageSource = _D(77,97,116,101,114,105,97,108),
+ ShowTitle = true
+})
+_ia:CreateSection(_D(65,106,117,115,116,101,115,32,86,105,115,117,97,105,115))
+_ia:CreateToggle({
+ Name = _D(83,116,114,101,116,99,104,101,100,32,82,101,115,111,108,117,116,105,111,110),
+ CurrentValue = true,
+ Callback = function(_ua)
+ if _ua then
+ _C()
+ else
+ _P()
+ end
+ end
+}, _D(83,116,114,101,116,99,104,101,100,84,111,103,103,108,101))
+_ia:CreateSlider({
+ Name = _D(65,106,117,115,116,101,32,100,101,32,70,79,86,32,47,32,82,101,115,111,108,117,195,167,195,163,111),
+ Range = {10, 100},
+ Increment = 1,
+ CurrentValue = 100,
+ Callback = function(_ua)
+ _w(_ua)
+ end
+}, _D(82,101,115,111,108,117,116,105,111,110,83,108,105,100,101,114))
+local _W = _oa:CreateTab({
+ Name = _D(67,111,110,102,105,103),
+ Icon = _D(115,97,118,101),
+ ImageSource = _D(77,97,116,101,114,105,97,108),
+ ShowTitle = true
+})
+_W:BuildConfigSection()
 
